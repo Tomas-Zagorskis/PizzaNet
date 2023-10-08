@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using pizzareact.Data.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace pizzareact.Models {
     public class Pizza {
@@ -7,5 +8,7 @@ namespace pizzareact.Models {
         public string Name { get; set; }
         public string Description { get; set; }
         public string Image { get; set; }
+        public PizzaSize Size { get; set; }
+        public List<PizzaTopping> Toppings { get; set; }
     }
 }
