@@ -1,8 +1,24 @@
+using Microsoft.EntityFrameworkCore;
+using pizzareact.Data;
+using pizzareact.Data.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// DbContext configuration
+builder.Services.AddDbContext<ApiDbContext>(options => 
+    options.UseInMemoryDatabase(databaseName: "PizzaDb")
+);
+
+builder.Services.AddScoped<IPizzaService, PizzaService>();
+builder.Services.AddScoped<ISizeService, SizeService>();
+builder.Services.AddScoped<IToppingService, ToppingService>();
+
 
 // Add services to the container.
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
+
+
 
 var app = builder.Build();
 
@@ -16,11 +32,12 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-
 app.MapControllerRoute(
     name: "default",
-    pattern: "api/{controller}/{action=Index}/{id?}");
+    pattern: "{controller}/{action=Index}/{id?}");
 
 app.MapFallbackToFile("index.html"); ;
+
+DataGenerator.Initialize(app);
 
 app.Run();
