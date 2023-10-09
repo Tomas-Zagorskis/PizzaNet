@@ -11,7 +11,9 @@ const PizzaList = () => {
 			.then(data => setPizzas(data));
 	}, []);
 
-	const pizzasMap = pizzas?.map((pizza: Pizza) => <PizzaItem pizza={pizza} />);
+	const pizzasMap = pizzas?.map((pizza: Pizza) => (
+		<PizzaItem pizza={pizza} key={pizza.id} />
+	));
 	return <div className='p-4'>{pizzasMap}</div>;
 };
 export default PizzaList;

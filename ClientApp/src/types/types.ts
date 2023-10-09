@@ -3,6 +3,8 @@ export type Pizza = {
 	name: string;
 	description: string;
 	image: string;
+	size: PizzaSize;
+	toppings: Topping[];
 };
 
 type PizzaSizeConst = 'Small' | 'Medium' | 'Large';
@@ -12,6 +14,7 @@ export type PizzaSize = {
 	pizzaSizeString: PizzaSizeConst;
 	pizzaSize: number;
 	sizeInCm: number;
+	price: number;
 };
 
 export type Topping = {
@@ -19,4 +22,13 @@ export type Topping = {
 	pizzaToppingString: string;
 	pizzaTopping: number;
 	amountInGrams: number;
+	price: number;
+};
+
+export type Order = {
+	pizza: Pizza;
+	size: PizzaSizeConst;
+	toppings: Topping[];
+	sizePrice: number;
+	toppingsPrice: number;
 };
