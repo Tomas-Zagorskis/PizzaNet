@@ -1,13 +1,11 @@
 import { Outlet } from 'react-router-dom';
-import { ModeToggle } from './mode-toggle';
+import Header from './Header';
 
 const Layout = () => {
 	return (
 		<>
+			<Header />
 			<Outlet />
-			<div className='absolute top-3 right-3'>
-				<ModeToggle />
-			</div>
 		</>
 	);
 };
