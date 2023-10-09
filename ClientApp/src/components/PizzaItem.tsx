@@ -65,6 +65,7 @@ const PizzaItem = ({ pizza }: PizzaItemProps) => {
 	}, [sizeId]);
 
 	const handleClick = () => {
+		setOrder(prev => ({ ...prev, id: Math.floor(Math.random() * 1000000) }));
 		dispatch(addItem(order));
 	};
 
