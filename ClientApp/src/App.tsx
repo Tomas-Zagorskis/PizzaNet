@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import { Pizza, PizzaSize, Topping } from './types/types';
 import PizzaOutlineSvg from './components/ui/PizzaOutlineSvg';
+import { ThemeProvider } from './components/theme-provider';
+import { ModeToggle } from './components/mode-toggle';
 
 function App() {
 	const [pizzas, setPizzas] = useState<Pizza[] | null>(null);
@@ -42,9 +44,12 @@ function App() {
 		);
 	});
 	return (
-		<div>
+		<ThemeProvider defaultTheme='dark' storageKey='pizza-ui-theme'>
 			<div className='card'>{pizzasMap}</div>
-		</div>
+			<div className='absolute top-3 right-3'>
+				<ModeToggle />
+			</div>
+		</ThemeProvider>
 	);
 }
 
