@@ -26,6 +26,7 @@ export type Topping = {
 };
 
 export type Order = {
+	id: number;
 	pizza: Pizza;
 	size: PizzaSizeConst;
 	toppings: Topping[];

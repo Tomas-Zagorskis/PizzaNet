@@ -10,6 +10,8 @@ import {
 } from './ui/card';
 import { Toggle } from './ui/toggle';
 import { Button } from './ui/button';
+import { useDispatch } from 'react-redux';
+import { addItem } from '@/store/cartSlice';
 
 type PizzaItemProps = {
 	pizza: Pizza;
@@ -18,13 +20,16 @@ type PizzaItemProps = {
 const PizzaItem = ({ pizza }: PizzaItemProps) => {
 	const [sizes, setSizes] = useState<PizzaSize[] | null>(null);
 	const [toppings, setToppings] = useState<Topping[] | null>(null);
+	const [sizeId, setSizeId] = useState(1);
 	const [order, setOrder] = useState<Order>({
+		id: Math.floor(Math.random() * 1000000),
 		pizza,
 		size: 'Small',
 		toppings: [],
 		sizePrice: 8,
 		toppingsPrice: 0,
 	});
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		fetch('api/get-sizes')
@@ -35,8 +40,32 @@ const PizzaItem = ({ pizza }: PizzaItemProps) => {
 			.then(data => setToppings(data));
 	}, []);
 
+	useEffect(() => {
+		fetch(`api/get-price-size/${sizeId}`)
+			.then(result => result.json())
+			.then(data =>
+				setOrder(prev => ({
+					...prev,
+					sizePrice: data.price,
+					size: data.pizzaSizeString,
+				})),
+			);
+	}, [sizeId]);
+
+	useEffect(() => {
+		fetch(`api/get-price-size/${sizeId}`)
+			.then(result => result.json())
+			.then(data =>
+				setOrder(prev => ({
+					...prev,
+					sizePrice: data.price,
+					size: data.pizzaSizeString,
+				})),
+			);
+	}, [sizeId]);
+
 	const handleClick = () => {
-		console.log(pizza);
+		dispatch(addItem(order));
 	};
 
 	return (
@@ -69,11 +98,7 @@ const PizzaItem = ({ pizza }: PizzaItemProps) => {
 								className='dark:border-zinc-600'
 								pressed={order.size === size.pizzaSizeString}
 								onPressedChange={() => {
-									setOrder(prev => ({
-										...prev,
-										sizePrice: size.price,
-										size: size.pizzaSizeString,
-									}));
+									setSizeId(size.id);
 								}}>
 								{size.pizzaSizeString}
 							</Toggle>
@@ -96,11 +121,13 @@ const PizzaItem = ({ pizza }: PizzaItemProps) => {
 										setOrder(prev => ({
 											...prev,
 											toppingsPrice: prev.toppingsPrice + topping.price,
+											toppings: [...prev.toppings, topping],
 										}));
 									} else {
 										setOrder(prev => ({
 											...prev,
 											toppingsPrice: prev.toppingsPrice - topping.price,
+											toppings: prev.toppings.filter(t => t.id !== topping.id),
 										}));
 									}
 								}}>
