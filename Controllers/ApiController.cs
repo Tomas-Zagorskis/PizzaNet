@@ -34,5 +34,17 @@ namespace pizzareact.Controllers
             var toppings = await _toppingService.GetAllAsync();
             return toppings;
         }
+
+        [HttpGet("get-price-size/{id:int}")]
+        public async Task<Size> GetPriceSize(int id) {
+            var size = await _sizeService.GetByIdAsync(id);
+            return size;
+        }
+        
+        [HttpGet("get-price-topping/{id:int}")]
+        public async Task<Topping> GetPriceTopping(int id) {
+            var topping = await _toppingService.GetByIdAsync(id);
+            return topping;
+        }
     }
 }
