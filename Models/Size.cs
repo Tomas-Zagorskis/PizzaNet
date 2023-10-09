@@ -20,5 +20,6 @@ namespace pizzareact.Models {
         public PizzaSize PizzaSize { get; set; }
 
         public int SizeInCm { get; set; }
+        public int Price { get; set; }
     }
 }

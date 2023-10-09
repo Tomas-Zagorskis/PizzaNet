@@ -20,5 +20,7 @@ namespace pizzareact.Models {
         public PizzaTopping PizzaTopping { get; set; }
 
         public int AmountInGrams { get; set; }
+
+        public int Price { get; set; }
     }
 }

@@ -40,17 +40,20 @@ namespace pizzareact.Data {
                     new Size
                     {
                         PizzaSize = PizzaSize.Small,
-                        SizeInCm = 24
+                        SizeInCm = 24,
+                        Price = 8
                     },
                     new Size
                     {
                         PizzaSize = PizzaSize.Medium,
-                        SizeInCm = 32
+                        SizeInCm = 32,
+                        Price = 10
                     },
                     new Size
                     {
                         PizzaSize = PizzaSize.Large,
-                        SizeInCm = 40
+                        SizeInCm = 40,
+                        Price = 12
                     }
                     );
 
@@ -63,41 +66,49 @@ namespace pizzareact.Data {
                     {
                         PizzaTopping = PizzaTopping.Jalapeno,
                         AmountInGrams = 100,
+                        Price = 1
                     },
                     new Topping
                     {
                         PizzaTopping = PizzaTopping.Ham,
                         AmountInGrams = 100,
+                        Price = 1
                     },
                     new Topping
                     {
                         PizzaTopping = PizzaTopping.Bacon,
                         AmountInGrams = 100,
+                        Price = 1
                     },
                     new Topping
                     {
                         PizzaTopping = PizzaTopping.Pepperoni,
                         AmountInGrams = 100,
+                        Price = 1
                     },
                     new Topping
                     {
                         PizzaTopping = PizzaTopping.Feta,
                         AmountInGrams = 100,
+                        Price = 1
                     },
                     new Topping
                     {
                         PizzaTopping = PizzaTopping.Mozzarella,
                         AmountInGrams = 100,
+                        Price = 1
                     },
                     new Topping
                     {
                         PizzaTopping = PizzaTopping.Mushrooms,
                         AmountInGrams = 100,
+                        Price = 1
                     },
                     new Topping
                     {
                         PizzaTopping = PizzaTopping.Onion,
                         AmountInGrams = 100,
+                        Price = 1
                     }
                     );
 
