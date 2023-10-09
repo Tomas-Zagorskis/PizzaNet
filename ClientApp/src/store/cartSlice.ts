@@ -24,13 +24,19 @@ export const counterSlice = createSlice({
 				action.payload.sizePrice + action.payload.toppingsPrice;
 		},
 		removeItem: (state, action: PayloadAction<Order>) => {
-			state.orders.filter(order => order.id !== action.payload.id);
+			state.orders = state.orders.filter(
+				order => order.id !== action.payload.id,
+			);
 			state.totalPrice -=
 				action.payload.sizePrice + action.payload.toppingsPrice;
+		},
+		clearCart: state => {
+			state.orders = [];
+			state.totalPrice = 0;
 		},
 	},
 });
 
-export const { addItem, removeItem } = counterSlice.actions;
+export const { addItem, removeItem, clearCart } = counterSlice.actions;
 
 export default counterSlice.reducer;
