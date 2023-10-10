@@ -22,6 +22,7 @@ export type Topping = {
 	pizzaToppingString: string;
 	pizzaTopping: number;
 	amountInGrams: number;
+	cartItemId: number;
 	price: number;
 };
 
@@ -32,4 +33,18 @@ export type Order = {
 	toppings: Topping[];
 	sizePrice: number;
 	toppingsPrice: number;
+	totalPrice: number;
+};
+
+export type CartItem = {
+	id?: number;
+	pizzaId: number;
+	sizeId: number;
+	toppings: Topping[];
+};
+
+export type OrderRequest = {
+	id?: number;
+	orders: CartItem[];
+	totalPrice: number;
 };

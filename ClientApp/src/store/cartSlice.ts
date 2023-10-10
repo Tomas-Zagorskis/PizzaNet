@@ -3,15 +3,15 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 export interface CounterState {
+	id: number;
 	orders: Order[];
 	totalPrice: number;
-	discount: number;
 }
 
 const initialState: CounterState = {
+	id: Math.floor(Math.random() * 1000000),
 	orders: [],
 	totalPrice: 0,
-	discount: 0,
 };
 
 export const counterSlice = createSlice({
@@ -20,15 +20,13 @@ export const counterSlice = createSlice({
 	reducers: {
 		addItem: (state, action: PayloadAction<Order>) => {
 			state.orders.push(action.payload);
-			state.totalPrice +=
-				action.payload.sizePrice + action.payload.toppingsPrice;
+			state.totalPrice += action.payload.totalPrice;
 		},
 		removeItem: (state, action: PayloadAction<Order>) => {
 			state.orders = state.orders.filter(
 				order => order.id !== action.payload.id,
 			);
-			state.totalPrice -=
-				action.payload.sizePrice + action.payload.toppingsPrice;
+			state.totalPrice -= action.payload.totalPrice;
 		},
 		clearCart: state => {
 			state.orders = [];

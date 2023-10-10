@@ -1,4 +1,4 @@
-import { Order, Pizza, PizzaSize, Topping } from '@/types/types';
+import { CartItem, Order, Pizza, PizzaSize, Topping } from '@/types/types';
 import { useState, useEffect } from 'react';
 import PizzaOutlineSvg from './ui/PizzaOutlineSvg';
 import {
@@ -10,17 +10,19 @@ import {
 } from './ui/card';
 import { Toggle } from './ui/toggle';
 import { Button } from './ui/button';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addItem } from '@/store/cartSlice';
+import { RootState } from '@/store/store';
 
 type PizzaItemProps = {
 	pizza: Pizza;
+	sizes: PizzaSize[];
 };
 
-const PizzaItem = ({ pizza }: PizzaItemProps) => {
-	const [sizes, setSizes] = useState<PizzaSize[] | null>(null);
+let cartId = Math.floor(Math.random() * 1000000);
+
+const PizzaItem = ({ pizza, sizes }: PizzaItemProps) => {
 	const [toppings, setToppings] = useState<Topping[] | null>(null);
-	const [sizeId, setSizeId] = useState(1);
 	const [order, setOrder] = useState<Order>({
 		id: Math.floor(Math.random() * 1000000),
 		pizza,
@@ -28,20 +30,25 @@ const PizzaItem = ({ pizza }: PizzaItemProps) => {
 		toppings: [],
 		sizePrice: 8,
 		toppingsPrice: 0,
+		totalPrice: 8,
 	});
+	const [req, setReq] = useState<CartItem>({
+		pizzaId: pizza.id,
+		toppings: [],
+		sizeId: sizes[0].id,
+	});
+
 	const dispatch = useDispatch();
+	const cart = useSelector((state: RootState) => state.cart);
 
 	useEffect(() => {
-		fetch('api/get-sizes')
-			.then(result => result.json())
-			.then(data => setSizes(data));
 		fetch('api/get-toppings')
 			.then(result => result.json())
 			.then(data => setToppings(data));
 	}, []);
 
 	useEffect(() => {
-		fetch(`api/get-price-size/${sizeId}`)
+		fetch(`api/get-price-size/${req.sizeId}`)
 			.then(result => result.json())
 			.then(data =>
 				setOrder(prev => ({
@@ -50,23 +57,38 @@ const PizzaItem = ({ pizza }: PizzaItemProps) => {
 					size: data.pizzaSizeString,
 				})),
 			);
-	}, [sizeId]);
+	}, [req.sizeId]);
 
 	useEffect(() => {
-		fetch(`api/get-price-size/${sizeId}`)
+		fetch('api/get-pizza-price', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(req),
+		})
 			.then(result => result.json())
-			.then(data =>
+			.then(data => {
 				setOrder(prev => ({
 					...prev,
-					sizePrice: data.price,
-					size: data.pizzaSizeString,
-				})),
-			);
-	}, [sizeId]);
+					totalPrice: Number(data),
+				}));
+			});
+	}, [req?.sizeId, req?.toppings.length]);
 
 	const handleClick = () => {
 		setOrder(prev => ({ ...prev, id: Math.floor(Math.random() * 1000000) }));
 		dispatch(addItem(order));
+
+		// fetch('api/add-cart-item', {
+		// 	method: 'POST',
+		// 	headers: { 'Content-Type': 'application/json' },
+		// 	body: JSON.stringify({
+		// 		id: cartId,
+		// 		...req,
+		// 		orderId: cart.id,
+		// 	}),
+		// });
+
+		cartId = Math.floor(Math.random() * 1000000);
 	};
 
 	return (
@@ -90,7 +112,7 @@ const PizzaItem = ({ pizza }: PizzaItemProps) => {
 				</legend>
 				<div className='flex items-center justify-center space-x-2'>
 					{sizes
-						?.sort((a, b) => a.id - b.id)
+						?.sort((a, b) => a.sizeInCm - b.sizeInCm)
 						.map(size => (
 							<Toggle
 								key={size.id}
@@ -99,9 +121,9 @@ const PizzaItem = ({ pizza }: PizzaItemProps) => {
 								className='dark:border-zinc-600'
 								pressed={order.size === size.pizzaSizeString}
 								onPressedChange={() => {
-									setSizeId(size.id);
+									setReq(prev => ({ ...prev, sizeId: size.id }));
 								}}>
-								{size.pizzaSizeString}
+								{size.pizzaSizeString} ({size.sizeInCm}cm)
 							</Toggle>
 						))}
 				</div>
@@ -110,6 +132,9 @@ const PizzaItem = ({ pizza }: PizzaItemProps) => {
 				<legend className='mb-2 text-sm text-zinc-600 font-semibold dark:text-zinc-400'>
 					Add pizza toppings (optional):
 				</legend>
+				<p className='mb-2 text-xs text-primary font-semibold'>
+					order more than 3 toppings for a 10% discount
+				</p>
 				<div className='flex items-center justify-center flex-wrap gap-2 my-4'>
 					{toppings?.map(topping => (
 						<div key={topping.id}>
@@ -124,10 +149,21 @@ const PizzaItem = ({ pizza }: PizzaItemProps) => {
 											toppingsPrice: prev.toppingsPrice + topping.price,
 											toppings: [...prev.toppings, topping],
 										}));
+										setReq(prev => ({
+											...prev,
+											toppings: [
+												...prev.toppings,
+												{ ...topping, cartItemId: cartId },
+											],
+										}));
 									} else {
 										setOrder(prev => ({
 											...prev,
 											toppingsPrice: prev.toppingsPrice - topping.price,
+											toppings: prev.toppings.filter(t => t.id !== topping.id),
+										}));
+										setReq(prev => ({
+											...prev,
 											toppings: prev.toppings.filter(t => t.id !== topping.id),
 										}));
 									}
@@ -143,7 +179,7 @@ const PizzaItem = ({ pizza }: PizzaItemProps) => {
 					<input
 						type='number'
 						className='bg-background w-28 text-right  justify-self-start'
-						value={Number(order.sizePrice + order.toppingsPrice).toFixed(2)}
+						value={Number(order.totalPrice).toFixed(2)}
 						disabled
 					/>
 					<span className='justify-self-start'>€</span>

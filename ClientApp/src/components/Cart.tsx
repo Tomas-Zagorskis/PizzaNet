@@ -25,7 +25,10 @@ const Cart = () => {
 						className='rounded-lg'
 					/>
 					<div className='space-y-1'>
-						<CardTitle>{order.pizza.name}</CardTitle>
+						<CardTitle>
+							{order.pizza.name}{' '}
+							<sup className='text-xs text-primary'>{order.size}</sup>
+						</CardTitle>
 						<CardDescription>{order.pizza.description}</CardDescription>
 						<CardDescription>
 							Extra toppings:{' '}
@@ -35,9 +38,7 @@ const Cart = () => {
 						</CardDescription>
 					</div>
 					<div className='flex flex-nowrap gap-2 min-w-max ml-auto font-serif align-baseline'>
-						<CardTitle>
-							{(order.sizePrice + order.toppingsPrice).toFixed(2)} €
-						</CardTitle>
+						<CardTitle>{order.totalPrice.toFixed(2)} €</CardTitle>
 						<Button
 							variant='destructive'
 							size='sm'
