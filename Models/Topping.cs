@@ -22,5 +22,8 @@ namespace pizzareact.Models {
         public int AmountInGrams { get; set; }
 
         public int Price { get; set; }
+
+        public int CartItemId { get; set; }
+        public CartItem? CartItem { get; set; }
     }
 }
