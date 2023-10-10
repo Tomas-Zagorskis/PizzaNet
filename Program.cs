@@ -12,6 +12,7 @@ builder.Services.AddDbContext<ApiDbContext>(options =>
 builder.Services.AddScoped<IPizzaService, PizzaService>();
 builder.Services.AddScoped<ISizeService, SizeService>();
 builder.Services.AddScoped<IToppingService, ToppingService>();
+builder.Services.AddScoped<CartService>();
 
 
 // Add services to the container.
