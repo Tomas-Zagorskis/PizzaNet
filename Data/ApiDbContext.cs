@@ -9,6 +9,8 @@ namespace pizzareact.Data {
         public DbSet<Pizza> Pizzas { get; set; }
         public DbSet<Size> Sizes { get; set; }
         public DbSet<Topping> Toppings { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
     }
 }

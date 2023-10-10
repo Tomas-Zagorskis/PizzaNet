@@ -10,11 +10,13 @@ namespace pizzareact.Controllers
         private readonly ISizeService _sizeService;
         private readonly IToppingService _toppingService;
         private readonly IPizzaService _pizzaService;
-        public ApiController(ISizeService sizeService, IToppingService toppingService, IPizzaService pizzaService)
+        private readonly CartService _cartService;
+        public ApiController(ISizeService sizeService, IToppingService toppingService, IPizzaService pizzaService, CartService cartService)
         {
             _pizzaService = pizzaService;
             _sizeService = sizeService;
             _toppingService = toppingService;
+            _cartService = cartService;
         }
 
         [HttpGet("get-pizzas")]
@@ -45,6 +47,13 @@ namespace pizzareact.Controllers
         public async Task<Topping> GetPriceTopping(int id) {
             var topping = await _toppingService.GetByIdAsync(id);
             return topping;
+        }
+
+        [HttpPost("get-pizza-price")]
+        public async Task<double> GetPizzaPrice(CartItem item)
+        {
+            var price = await _cartService.GetPizzaPrice(item);
+            return price;
         }
     }
 }
