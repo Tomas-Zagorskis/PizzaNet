@@ -11,7 +11,12 @@ namespace pizzareact.Controllers
         private readonly IToppingService _toppingService;
         private readonly IPizzaService _pizzaService;
         private readonly CartService _cartService;
-        public ApiController(ISizeService sizeService, IToppingService toppingService, IPizzaService pizzaService, CartService cartService)
+        public ApiController(
+            ISizeService sizeService,
+            IToppingService toppingService,
+            IPizzaService pizzaService,
+            CartService cartService
+            )
         {
             _pizzaService = pizzaService;
             _sizeService = sizeService;
@@ -50,10 +55,29 @@ namespace pizzareact.Controllers
         }
 
         [HttpPost("get-pizza-price")]
-        public async Task<double> GetPizzaPrice(CartItem item)
-        {
+        public async Task<double> GetPizzaPrice(CartItem item) {
             var price = await _cartService.GetPizzaPrice(item);
             return price;
+        }
+
+        [HttpPost("add-cart-item")]
+        public async Task AddCartItem(CartItem item) {
+            await _cartService.AddCartItemAsync(item);
+        }
+        
+        [HttpGet("delete-cart-item/{id:int}")]
+        public async Task DeleteCartItem(int id) {
+            await _cartService.DeleteCartItemAsync(id);
+        }
+        
+        [HttpGet("save-order")]
+        public async Task SaveOrder(Order order) {
+            await _cartService.AddOrderAsync(order);
+        }
+        
+        [HttpGet("get-orders")]
+        public async Task<IEnumerable<Order>> GetOrders() {
+           return await _cartService.GetAllOrdersAsync();
         }
     }
 }
