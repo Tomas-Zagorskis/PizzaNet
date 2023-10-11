@@ -10,9 +10,8 @@ import {
 } from './ui/card';
 import { Toggle } from './ui/toggle';
 import { Button } from './ui/button';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { addItem } from '@/store/cartSlice';
-import { RootState } from '@/store/store';
 
 type PizzaItemProps = {
 	pizza: Pizza;
@@ -39,7 +38,7 @@ const PizzaItem = ({ pizza, sizes }: PizzaItemProps) => {
 	});
 
 	const dispatch = useDispatch();
-	const cart = useSelector((state: RootState) => state.cart);
+	// const cart = useSelector((state: RootState) => state.cart);
 
 	useEffect(() => {
 		fetch('api/get-toppings')
