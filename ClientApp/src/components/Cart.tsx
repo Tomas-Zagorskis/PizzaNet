@@ -4,8 +4,12 @@ import { Card, CardDescription, CardFooter, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { BsFillTrashFill } from 'react-icons/bs';
 import { clearCart, removeItem } from '@/store/cartSlice';
+import { useNavigate } from 'react-router-dom';
+import { addCart } from '@/store/ordersSlice';
+import { toast } from 'sonner';
 
 const Cart = () => {
+	const navigate = useNavigate();
 	const cart = useSelector((state: RootState) => state.cart);
 	const dispatch = useDispatch();
 
@@ -50,9 +54,24 @@ const Cart = () => {
 			))}
 			{cart.totalPrice != 0 ? (
 				<CardFooter className='flex flex-nowrap justify-between pt-12'>
-					<CardTitle>Total: {cart.totalPrice.toFixed(2)} €</CardTitle>
-					<Button variant='default'>Checkout</Button>
-					<Button variant='secondary'>Continue shopping</Button>
+					<CardTitle>
+						<span className='font-serif'>
+							Total: {cart.totalPrice.toFixed(2)} €
+						</span>
+					</CardTitle>
+					<Button
+						variant='default'
+						onClick={() => {
+							dispatch(addCart(cart));
+							dispatch(clearCart());
+							toast.success('Order confirmed');
+							navigate('/');
+						}}>
+						Checkout
+					</Button>
+					<Button variant='secondary' onClick={() => navigate('/')}>
+						Continue shopping
+					</Button>
 					<Button variant='destructive' onClick={() => dispatch(clearCart())}>
 						Clear Order
 					</Button>
