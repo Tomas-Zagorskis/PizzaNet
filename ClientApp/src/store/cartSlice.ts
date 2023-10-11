@@ -2,19 +2,19 @@ import { Order } from '@/types/types';
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-export interface CounterState {
+export interface CartState {
 	id: number;
 	orders: Order[];
 	totalPrice: number;
 }
 
-const initialState: CounterState = {
+const initialState: CartState = {
 	id: Math.floor(Math.random() * 1000000),
 	orders: [],
 	totalPrice: 0,
 };
 
-export const counterSlice = createSlice({
+export const cartSlice = createSlice({
 	name: 'cart',
 	initialState,
 	reducers: {
@@ -35,6 +35,6 @@ export const counterSlice = createSlice({
 	},
 });
 
-export const { addItem, removeItem, clearCart } = counterSlice.actions;
+export const { addItem, removeItem, clearCart } = cartSlice.actions;
 
-export default counterSlice.reducer;
+export default cartSlice.reducer;
