@@ -91,16 +91,22 @@ const PizzaItem = ({ pizza, sizes }: PizzaItemProps) => {
 	};
 
 	return (
-		<Card key={pizza.id} className='text-center max-w-xl mx-auto p-8 my-8'>
-			<CardHeader className='relative mx-auto w-[300px] p-0 space-y-0 my-6'>
+		<Card
+			key={pizza.id}
+			className='text-center max-w-xl mx-auto p-0 my-8 sm:p-8'>
+			<CardHeader className='relative mx-auto w-[250px] p-0 space-y-0 my-6 sm:w-[300px]'>
 				<PizzaOutlineSvg />
 				<img
 					src={pizza.image}
 					alt={pizza.name}
-					className='absolute inset-[50%] translate-x-[-50%] translate-y-[-50%]'
-					width={
-						order.size === 'Small' ? 260 : order.size === 'Medium' ? 280 : 300
-					}
+					className={`absolute inset-[50%] translate-x-[-50%] translate-y-[-50%]
+					${
+						order.size === 'Small'
+							? 'w-[210px] sm:w-[260px]'
+							: order.size === 'Medium'
+							? 'w-[230px] sm:w-[280px]'
+							: 'w-[250px] sm:w-[300px]'
+					}`}
 				/>
 			</CardHeader>
 			<CardTitle className='mb-4'>{pizza.name}</CardTitle>
@@ -113,17 +119,30 @@ const PizzaItem = ({ pizza, sizes }: PizzaItemProps) => {
 					{sizes
 						?.sort((a, b) => a.sizeInCm - b.sizeInCm)
 						.map(size => (
-							<Toggle
-								key={size.id}
-								variant='outline'
-								size='sm'
-								className='dark:border-zinc-600'
-								pressed={order.size === size.pizzaSizeString}
-								onPressedChange={() => {
-									setReq(prev => ({ ...prev, sizeId: size.id }));
-								}}>
-								{size.pizzaSizeString} ({size.sizeInCm}cm)
-							</Toggle>
+							<>
+								<Toggle
+									key={size.id}
+									variant='outline'
+									size='sm'
+									className='dark:border-zinc-600 hidden sm:block'
+									pressed={order.size === size.pizzaSizeString}
+									onPressedChange={() => {
+										setReq(prev => ({ ...prev, sizeId: size.id }));
+									}}>
+									{size.pizzaSizeString} ({size.sizeInCm}cm)
+								</Toggle>
+								<Toggle
+									key={size.id}
+									variant='outline'
+									size='sm'
+									className='dark:border-zinc-600 sm:hidden'
+									pressed={order.size === size.pizzaSizeString}
+									onPressedChange={() => {
+										setReq(prev => ({ ...prev, sizeId: size.id }));
+									}}>
+									{size.sizeInCm} cm
+								</Toggle>
+							</>
 						))}
 				</div>
 			</fieldset>
@@ -134,7 +153,7 @@ const PizzaItem = ({ pizza, sizes }: PizzaItemProps) => {
 				<p className='mb-2 text-xs text-primary font-semibold'>
 					order more than 3 toppings for a 10% discount
 				</p>
-				<div className='flex items-center justify-center flex-wrap gap-2 my-4'>
+				<div className='flex items-center justify-center flex-wrap gap-2 m-4'>
 					{toppings?.map(topping => (
 						<div key={topping.id}>
 							<Toggle
@@ -173,11 +192,11 @@ const PizzaItem = ({ pizza, sizes }: PizzaItemProps) => {
 					))}
 				</div>
 			</fieldset>
-			<CardFooter className='flex justify-around mt-5'>
-				<div className='text-3xl font-bold font-serif'>
+			<CardFooter className='flex justify-between mt-5 sm:justify-around'>
+				<div className='text-2xl font-bold font-serif sm:text-3xl'>
 					<input
 						type='number'
-						className='bg-background w-28 text-right  justify-self-start'
+						className='bg-background w-20 sm:w-28 text-right justify-self-start'
 						value={Number(order.totalPrice).toFixed(2)}
 						disabled
 					/>

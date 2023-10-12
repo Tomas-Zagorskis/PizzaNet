@@ -1,6 +1,7 @@
 const PizzaOutlineSvg = () => {
 	return (
 		<svg
+			className='w-auto'
 			width='300'
 			height='300'
 			viewBox='0 0 260 260'
